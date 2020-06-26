@@ -1,0 +1,27 @@
+<!-- ここは管理者用Controllerのindexメソッドによって遷移するトップページ -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeLeaf.org">
+<head>
+<meta charset="UTF-8"/>
+<!-- cssを読み込むためのlinkタグ -->
+<link href="/css/style.css" th:href="@{/css/style.css}" rel="stylesheet" />
+<title>ECサイト</title>
+</head>
+<body>
+
+<header>
+	<h1>My EC Site -- Admin page</h1>
+</header>
+<div id="adminPage">
+	<h2>管理者ログイン</h2>
+	
+	<!-- thymeleafが万が一動作しない場合でも　/ecsite/admin/welcome　へ遷移するようにしておく -->
+	<form name="LoginForm" method="post" action="/ecsite/admin/welcome" th:action="@{/ecsite/admin/welcome}">
+		<p>User name:<input Type="text" name="userName" /></p>
+		<p>Password:<input Type="password" name="password" /></p>
+		<button type="submit">Login</button>
+	</form> 
+	</div>
+
+</body>
+</html>

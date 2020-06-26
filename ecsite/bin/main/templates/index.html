@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeLeaf.org">
+<head>
+<meta charset="UTF-8">
+<title>ECサイト</title>
+<link href="/css/style.css" th:href="@{/css/style.css}" rel="stylesheet" />
+<script src="http://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<link rel="stylesheet"
+	href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+<script src="/js/common.js" th:src="@{/js/common.js}"></script>
+<!-- $(() => {}); 意味は$(function() {}); と同様で、ページオンロード時のイベントリスナ -->
+<script>
+/* 追加されたカート情報を、一覧形式でメモリ上に 保持しておくための変数を定義　*/
+let cartList = [];
+/* 「loginForm」のidを持つ要素で
+ submitイベントが発生した際にloginを呼び出すようリスナー登録。 */
+$(() => {
+	$('#loginForm').on('submit',login);
+/*「cartBtn」のclassを持つ要素で、
+clickイベントが発生した際にaddCartを呼び出すようリスナー登録 */
+	$('.cartBtn').on('click', addCart);
+	$('#buyBtn').on('click', buy);
+	$('#historyBtn').on('click', showHistory);
+	/* jquery-uiの モーダルダイアログ */
+	$('#history').dialog({
+		autoOpen: false,
+		width: 550,
+		model: true,
+		buttons: [
+			{
+				text: 'OK',
+				click: function(){
+					$(this).dialog("close");
+				}
+			},
+		]
+	});
+});
+</script>
+</head>
+<body>
+<header>
+	<h1>My EC Site</h1>
+	<div>
+		<form name="loginForm" id="loginForm" method="post" action="#">
+			User name:<input type="text" name="userName" />
+			Password :<input type="password" name="password" />
+			<button type="submit">Login</button>
+		</form>
+		<br />
+		<span id="welcome"> - - ようこそ！ゲストさん </span>
+		<input type="hidden" id="hiddenUserId" value="0" />
+		</div>
+</header>
+
+<table>
+<!-- <form>タグで定義するフォームの入力項目をグループ化するためのタグです。
+グループ化を行うことにより、グループの間をtabキーで簡単に移動することが可能-->
+	<thead>
+		<tr>
+			<th>ID</th><th>商品名</th><th>価格</th><th>注文数</th><th>カート</th>
+		</tr>
+	</thead>
+	<tbody>
+	<!--  Thymeleafを使用したループ処理。
+	ControllerでModelオブジェクトに追加されたキーで取得した値(今回はListコレクション)をループ。 -->
+	 <tr th:each="item: ${goods}">
+	 	<td th:text= "${item.id}" />
+	 	<td th:text= "${item.goodsName}" />
+	 	<td th:text= "${item.price}" />
+	 	<td><input type="number" class="count" value="0" /></td>
+	 	<td><button class="cartBtn">カートに入れる</button></td>
+	 	</tr>
+	 </tbody>
+</table>
+
+<!-- <form>タグで定義するフォームの入力項目をグループ化するためのタグです。
+グループ化を行うことにより、グループの間をtabキーで簡単に移動することが可能-->
+<fieldset>
+	<legend>カート</legend>
+	<table id="cart">
+		<thead>
+			<tr>
+				<th>ID</th><th>商品名</th><th>価格</th><th>注文数</th><th>カート</th>
+			</tr>
+		</thead>
+		<tbody>
+		<!-- ajaxを使い、RESTと呼ばれる手法で 動的にテーブル行を作成 -->
+		</tbody>
+	</table>
+		<button id="buyBtn">購入</button>	
+		<button id="historyBtn">履歴</button>
+</fieldset>		
+
+<!--  このdivに囲まれた要素は、初期表示時に非表示となるようスタイル定義。
+当該箇所は「履歴」ボタン押下時に表示する仕様として後に作成。 -->
+<div id="history" title="購入履歴" style="display:none;">
+	<table id="historyTable">
+		<thead>
+			<tr>
+				<th>商品名</th><th>注文数</th><th>購入日時</th>
+			</tr>
+		</thead>
+		<tbody>
+		
+		</tbody>
+	</table>
+</div>
+</body>
+</html>
